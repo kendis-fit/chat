@@ -4,8 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "../root.css";
 import Chats from "./Pages/Chats";
 import CreateChat from "./Pages/CreateChat";
-import { ProjectTitle } from "./Styles/Header";
-import Menu, { MenuItem } from "./Styles/Menu";
+import { ProjectTitle, Menu, MenuItem } from "./Styles/Main";
 
 const App = () => {
 	return (
