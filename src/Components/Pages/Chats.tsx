@@ -1,8 +1,13 @@
 import React from "react";
 
+import Menu from "../Menu";
+
 const Chats = () => {
     return (
-        <div>Chats</div>
+        <>
+            <Menu />
+            <div>Chats</div>
+        </>
     );
 }
 

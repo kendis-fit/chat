@@ -1,4 +1,4 @@
-import { SET_CONNECT } from "../Constants/Actions";
+import { SET_CONNECTION } from "../Constants/Actions";
 
 type Action = {
     type: string,
@@ -8,7 +8,7 @@ type Action = {
 const Connection = (state = {}, action: Action) => {
     switch (action.type)
     {
-        case SET_CONNECT:
+        case SET_CONNECTION:
             return action.value;
         default:
             return state;
