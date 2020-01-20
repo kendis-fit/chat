@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 import MongoDB from "./Db/MongoDB";
+import Cors from "./Middlewares/Cors";
 import WebServer from "./Server/WebServer";
 import SocketServer from "./Server/SocketServer";
 
@@ -19,6 +20,7 @@ else
 }
 
 const webServer = new WebServer(port);
+webServer.AddMiddleware(Cors);
 webServer.InitControllers(`${__dirname}/Controllers`);
 
 const sockerServer = new SocketServer(webServer.Server);

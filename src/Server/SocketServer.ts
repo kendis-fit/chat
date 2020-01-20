@@ -12,6 +12,7 @@ export default class SocketServer
     public constructor(server: http.Server)
     {
         this.ioServer = io(server);
+        this.ioServer.origins("*:*");
         this.listSockets = [];
     }
 

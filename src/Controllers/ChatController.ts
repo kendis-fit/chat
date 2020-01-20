@@ -141,7 +141,7 @@ const createNewChat = async (req: Request, res: Response) =>
     try
     {
         const chat: any = new Chat({ Name, Password });
-        const user: any = new User({ _id: mongoose.Types.ObjectId(Id), Name: Host, Status: "admin", Chat: chat._id });
+        const user: any = new User({ _id: Id, Name: Host, Status: "admin", Chat: chat._id });
         const message: any = new Message({ Chat: chat._id, Author: user._id, Content: `Host ${Host} created chat.` });
 
         user.Messages.push(message._id);

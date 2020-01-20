@@ -39,6 +39,11 @@ export default class WebServer
         });
     }
 
+    public AddMiddleware(middleware: any): void
+    {
+        this.app.use(middleware);
+    }
+
     public AddController(controller: IController): void
     {
         this.app.use(controller.Name, controller.Router());
@@ -49,20 +54,15 @@ export default class WebServer
         const port = this.port;
         const callbackServerRun = runEvent || function() { console.log(`Server has been running by port ${port}`) };
 
-        this.httpServer = this.Server;
-
-        this.httpServer.listen(port, callbackServerRun);
+        this.Server.listen(port, callbackServerRun);
     }
 
     public get Server(): Server
     {
         if (this.httpServer === null)
         {
-            return http.createServer(this.app);
+            this.httpServer = http.createServer(this.app);
         }
-        else
-        {
-            return this.httpServer;
-        }
+        return this.httpServer;
     }
 }
