@@ -1,4 +1,6 @@
-export default interface IConnection
+import ICreatingChat from "./ICreatingChat";
+
+export default interface ICreatingChatAction
 {
-    SetConnect: (connect: SocketIOClient.Socket) => void;
+    SetChat: (chat: ICreatingChat) => void;
 }

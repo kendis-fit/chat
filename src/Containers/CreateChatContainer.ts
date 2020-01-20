@@ -1,10 +1,11 @@
 import { connect } from "react-redux";
 
+import ChatApi from "../Api/ChatApi";
 import CreateChat from "../Components/Pages/CreateChat";
-import { SetConnect } from "../Actions/ConnectionActions";
+import ICreateChat from "../Components/Pages/Interfaces/ICreatingChat";
 
 const mapDispatchToProps = (dispatch: any) => ({
-    SetConnect: (connect: SocketIOClient.Socket) => dispatch(SetConnect(connect))
+    SetChat: (chat: ICreateChat) => dispatch(ChatApi.Create(chat))
 });
 
 const CreateChatContainer = connect(null, mapDispatchToProps)(CreateChat);

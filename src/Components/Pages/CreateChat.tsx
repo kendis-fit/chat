@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
@@ -25,8 +24,7 @@ const CreateChat = (props: IConnection) => {
 
     const createChat = (e: React.FormEvent) => {
         
-        const hostConnection = io.connect("http://localhost");
-        props.SetConnect(hostConnection);
+        props.SetChat(chat);
 
         e.preventDefault();
         setIsSubmitChat(true);
@@ -37,18 +35,18 @@ const CreateChat = (props: IConnection) => {
     }
 
     return (
-        <FormCreateChat onClick={createChat}>
+        <FormCreateChat onSubmit={createChat}>
             <BlockInputData IsRequired={true}>
                 <div>
                     <label htmlFor="Host">Host</label>
                 </div>
-                <input id="Host" type="text" minLength={4} onChange={(e) => setChatByKey("Host", e.target.value)} />
+                <input id="Host" type="text" minLength={4} onChange={(e) => setChatByKey("Host", e.target.value)} required={true} />
             </BlockInputData>
             <BlockInputData IsRequired={true}>
                 <div>
                     <label htmlFor="Name">Server name</label>
                 </div>
-                <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} />
+                <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} required={true} />
             </BlockInputData>
             <BlockInputData IsRequired={false}>
                 <input id="IsPassword" type="checkbox" onClick={() => setShowChat(!showChat)} />
@@ -60,7 +58,7 @@ const CreateChat = (props: IConnection) => {
                     <div>
                         <label htmlFor="Password">Password</label>
                     </div>
-                    <input id="Password" type="password" minLength={5} onChange={(e) => setChatByKey("Password", e.target.value)} />
+                    <input id="Password" type="password" minLength={5} onChange={(e) => setChatByKey("Password", e.target.value)} required={true} />
                 </BlockInputData>
             }
             <BlockSendData>

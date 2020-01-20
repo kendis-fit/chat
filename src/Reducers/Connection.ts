@@ -1,6 +1,11 @@
 import { SET_CONNECT } from "../Constants/Actions";
 
-const Connection = (state = {}, action) => {
+type Action = {
+    type: string,
+    value: SocketIOClient.Socket
+}
+
+const Connection = (state = {}, action: Action) => {
     switch (action.type)
     {
         case SET_CONNECT:
