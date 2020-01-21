@@ -4,9 +4,10 @@ import { Redirect } from "react-router-dom";
 
 import Menu from "../Menu";
 import ChatApi from "../../Api/ChatApi";
+import { BlockCenter } from "../Styles/Blocks";
 import ICreatingChat from "./Interfaces/ICreatingChat";
 import ICreatingChatAction from "./Interfaces/ICreatingChatAction";
-import FormCreateChat, { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
+import { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
 
 const CreateChat = (props: ICreatingChatAction) => {
 
@@ -49,42 +50,44 @@ const CreateChat = (props: ICreatingChatAction) => {
     }
     
     if (isSubmitChat) {
-        return <Redirect to={`/chat/${chatId}`} />
+        return <Redirect to={`/chats/${chatId}`} />
     }
 
     return (
         <>
             <Menu />
-            <FormCreateChat onSubmit={createChat}>
-                <BlockInputData IsRequired={true}>
-                    <div>
-                        <label htmlFor="Host">Host</label>
-                    </div>
-                    <input id="Host" type="text" minLength={4} onChange={(e) => setChatByKey("Host", e.target.value)} required={true} />
-                </BlockInputData>
-                <BlockInputData IsRequired={true}>
-                    <div>
-                        <label htmlFor="Name">Server name</label>
-                    </div>
-                    <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} required={true} />
-                </BlockInputData>
-                <BlockInputData IsRequired={false}>
-                    <input id="IsPassword" type="checkbox" onClick={() => setShowChat(!showChat)} />
-                    <label htmlFor="IsPassword"> - Is Password</label>
-                </BlockInputData>
-                {
-                    showChat &&
+            <BlockCenter Width="250px">
+                <form onSubmit={createChat}>
                     <BlockInputData IsRequired={true}>
                         <div>
-                            <label htmlFor="Password">Password</label>
+                            <label htmlFor="Host">Host</label>
                         </div>
-                        <input id="Password" type="password" minLength={5} onChange={(e) => setChatByKey("Password", e.target.value)} required={true} />
+                        <input id="Host" type="text" minLength={4} onChange={(e) => setChatByKey("Host", e.target.value)} required={true} />
                     </BlockInputData>
-                }
-                <BlockSendData>
-                    <button type="submit">Create</button>
-                </BlockSendData>
-            </FormCreateChat>
+                    <BlockInputData IsRequired={true}>
+                        <div>
+                            <label htmlFor="Name">Server name</label>
+                        </div>
+                        <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} required={true} />
+                    </BlockInputData>
+                    <BlockInputData IsRequired={false}>
+                        <input id="IsPassword" type="checkbox" onClick={() => setShowChat(!showChat)} />
+                        <label htmlFor="IsPassword"> - Is Password</label>
+                    </BlockInputData>
+                    {
+                        showChat &&
+                        <BlockInputData IsRequired={true}>
+                            <div>
+                                <label htmlFor="Password">Password</label>
+                            </div>
+                            <input id="Password" type="password" minLength={5} onChange={(e) => setChatByKey("Password", e.target.value)} required={true} />
+                        </BlockInputData>
+                    }
+                    <BlockSendData>
+                        <button type="submit">Create</button>
+                    </BlockSendData>
+                </form>
+            </BlockCenter>
         </>
     );
 }

@@ -18,8 +18,8 @@ const App = () => {
 				<Switch>
 					<Route exact={true} path="/" component={Home} />
 					<Route path="/create" component={CreateChatContainer} />
-					<Route path="/chats" component={Chats} />
-					<Route path="/chat/:id" component={Chat} />
+					<Route exact={true} path="/chats" component={Chats} />
+					<Route path="/chats/:id" component={Chat} />
 				</Switch>
 			</BrowserRouter>
 		</main>

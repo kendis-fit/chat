@@ -5,5 +5,12 @@
 
 a {
     text-decoration: none;
-    color: white;
+}
+
+ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
 }

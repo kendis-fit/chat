@@ -11,5 +11,5 @@ export const BlockProject = styled.header`
 `;
 
 export const ProjectTitle = styled(NavLink)`
-
+    color: white;
 `;

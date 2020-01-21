@@ -2,11 +2,6 @@ import styled from "styled-components";
 
 import IRequiredField from "./Interfaces/IRequiredField";
 
-const FormCreateChat = styled.form`
-    margin: 0 auto;
-    width: 250px;
-`;
-
 export const BlockInputData = styled.div<IRequiredField>`
     margin-top: 25px;
 
@@ -25,5 +20,3 @@ export const BlockSendData = styled.div`
     display: flex;
     justify-content: flex-end;
 `;
-
-export default FormCreateChat;
