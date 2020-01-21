@@ -21,4 +21,18 @@ export default class ChatApi
             throw error;
         }
     }
+
+    public static async GetAll(offset: number, size: number)
+    {
+        try
+        {
+            const response = await fetch(`http://localhost:5000/chats?offset=${offset}&size=${size}`);
+            const listChat = await response.json();
+            return listChat;
+        }
+        catch (error)
+        {
+            throw error;
+        }
+    }
 }

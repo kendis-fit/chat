@@ -1,12 +1,15 @@
 import React from "react";
 
 import Menu from "../Menu";
+import { BlockInformation } from "../Styles/HomeInformation";
 
 const Home = () => {
     return (
         <>
             <Menu />
-            <div style={{ margin: "0 auto", width: "200px" }}>Info about project</div>
+            <BlockInformation>
+                <h2>Info about project</h2>
+            </BlockInformation>
         </>
     );
 }
