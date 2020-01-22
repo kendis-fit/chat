@@ -1,8 +1,10 @@
 import React from "react";
 
-const ItemUser = () => {
+import IUser from "../Interfaces/IUser";
+
+const ItemUser = (props: IUser) => {
     return(
-        <div></div>
+        <li>{props.Name} - {props.Status}</li>
     );
 }
 
