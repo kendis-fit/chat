@@ -1,8 +1,10 @@
 import React from "react";
 
-const ItemMessage = () => {
+import IMessage from "../Interfaces/IMessage";
+
+const ItemMessage = (props: IMessage) => {
     return(
-        <div></div>
+        <div> {props.Author ? props.Author.Name : ""}: {props.Content} created by {props.CreatedAt}</div>
     );
 }
 
