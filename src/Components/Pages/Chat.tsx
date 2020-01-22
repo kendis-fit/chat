@@ -7,6 +7,7 @@ import ListUser from "../Chat/Users/ListUser";
 import IInitChat from "./Interfaces/IInitChat";
 import IMessage from "../Chat/Interfaces/IMessage";
 import ListMessage from "../Chat/Messages/ListMessage";
+import { Redirect } from "react-router-dom";
 
 const Chat = (props: IInitChat) => {
 
@@ -31,6 +32,11 @@ const Chat = (props: IInitChat) => {
         GetMessages();
 
     }, [props]);
+
+    if (props.Socket === null)
+    {
+        return <Redirect to="/chats" />
+    }
 
     return(
         <FlexBlock>
