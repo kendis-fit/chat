@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const ListMessage = () => {
+import ItemMessage from "./ItemMessage"
+import IMessage from "../Interfaces/IMessage";
+import IListMessage from "../Interfaces/IListMessage";
+
+const ListMessage = (props: IListMessage) => {
+
+    const [messages, setMessages] = useState(props.Messages);
+
+    useEffect(() => {
+
+        props.Socket.on("receiveMessage", (message: IMessage) => setMessages([...messages, message]));
+
+    }, [messages, props]);
+
     return(
-        <div></div>
+        <ul>
+            {
+                messages.map((message, key) => <ItemMessage {...message} key={key} />)
+            }
+        </ul>
     );
 }
 
