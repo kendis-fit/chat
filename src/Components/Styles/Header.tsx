@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 
 export const BlockProject = styled.header`
     background: rgba(0, 0, 0, 0.35);
@@ -10,6 +9,7 @@ export const BlockProject = styled.header`
     line-height: 100px;
 `;
 
-export const ProjectTitle = styled(NavLink)`
+export const ProjectTitle = styled.div`
     color: white;
+    cursor: pointer;
 `;

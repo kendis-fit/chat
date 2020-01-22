@@ -13,7 +13,7 @@ const App = () => {
 		<main>
 			<BrowserRouter>
 				<BlockProject>
-					<ProjectTitle to="/">Chat.js</ProjectTitle>
+					<ProjectTitle onClick={() => window.location.href = "/"}>Chat.js</ProjectTitle>
 				</BlockProject>
 				<Switch>
 					<Route exact={true} path="/" component={Home} />
