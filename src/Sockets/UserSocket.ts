@@ -1,27 +1,20 @@
-import { Socket } from "socket.io";
+import { Socket, Server } from "socket.io";
 
 import User from "../Models/DB/User";
 import NotFoundError from "../Errors/NotFoundError";
 import Message from "../Models/DB/Message";
 
-const joinToChat = async (socket: Socket) =>
+const joinToChat = async (server: Server, socket: Socket) =>
 {
     try
     {
         const projectionUser = { _id: 0, Chat: 1, Messages: 1, Name: 1, Status: 1 };
-        const projectionUsers = { _id: 1 };
-        const projectionChat = { _id: 0, Users: 1 };
         const projectionMessage = { _id: 0, Content: 1, CreatedAt: 1 };
 
         const user: any = await User.findOne({ SocketId: socket.id }, projectionUser)
             .populate({
                 path: "Chat",
-                populate: { path: "Users", select: projectionUsers },
-                select: projectionChat
-            })
-            .populate({
-                path: "Messages",
-                select: projectionMessage
+                populate: { path: "Messages", select: projectionMessage }
             })
             .exec();
 
@@ -34,11 +27,13 @@ const joinToChat = async (socket: Socket) =>
             throw new NotFoundError("chat not found");
         }
 
-        const firstMessage = user.Messages[0]; // it generates in controller
+        const firstMessage = user.Chat.Messages[0]; // it generates in controller
         const joinedUser = { Name: user.Name, Status: user.Status };
 
-        user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("receiveMessage", firstMessage));
-        user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("receiveUser", joinedUser));
+        socket.join(user.Chat._id.toString());
+
+        server.to(user.Chat._id.toString()).emit("receiveMessage", firstMessage);
+        server.to(user.Chat._id.toString()).emit("receiveUser", joinedUser);
     }
     catch (error)
     {
@@ -53,14 +48,14 @@ const joinToChat = async (socket: Socket) =>
     }
 }
 
-const leftFromChat = async (socket: Socket) =>
+const leftFromChat = async (server: Server, socket: Socket) =>
 {
     try
     {
         const user: any = await User.findOneAndUpdate({ SocketId: socket.id }, { $set: { IsActive: false }})
             .populate({
                 path: "Chat",
-                populate: { path: "Users", select: { _id: 0, SocketId: 1 } }
+                select: { _id: 1, Messages: 1 }
             })
             .exec();
         if (!user)
@@ -69,12 +64,7 @@ const leftFromChat = async (socket: Socket) =>
         }
         if (user.Status === "admin")
         {
-            user.Chat.Users.forEach((usr: any) => {
-                if (usr.SocketId !== socket.id)
-                {
-                    socket.to(usr.SocketId).emit("exitChat");
-                }
-            });
+            server.to(user.Chat._id.toString()).emit("exitChat");
             user.Chat?.remove();
         }
         else 
@@ -88,7 +78,7 @@ const leftFromChat = async (socket: Socket) =>
             user.save();
             user.Chat.save();
 
-            user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("receiveMessage", { Author: { Name: message.Name }, Content: message.Content, CreatedAt: message.CreatedAt }));
+            server.to(user.Chat._id.toString()).emit("receiveMessage", { Author: { Name: message.Name }, Content: message.Content, CreatedAt: message.CreatedAt });
         }
     }
     catch (error)
@@ -104,8 +94,8 @@ const leftFromChat = async (socket: Socket) =>
     }
 }
 
-export default (socket: Socket) =>
+export default (server: Server, socket: Socket) =>
 {
-    socket.on("joinToChat", () => joinToChat(socket));
-    socket.on("disconnect", () => leftFromChat(socket));
+    socket.on("joinToChat", () => joinToChat(server, socket));
+    socket.on("disconnect", () => leftFromChat(server, socket));
 }

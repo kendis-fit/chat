@@ -1,15 +1,20 @@
-import { Socket } from "socket.io";
+import { Socket, Server } from "socket.io";
 
 import User from "../Models/DB/User";
 import Message from "../Models/DB/Message";
 import NotFoundError from "../Errors/NotFoundError";
 import IMessageSender from "../Models/DTO/IMessageSender";
 
-const sendMessage = async (socket: Socket, message: IMessageSender) =>
+const sendMessage = async (server: Server, socket: Socket, message: IMessageSender) =>
 {
     try
     {
-        const user: any = await User.findOne({ SocketId: socket.id }).populate("Chat").exec();
+        const user: any = await User.findOne({ SocketId: socket.id })
+            .populate({
+                path: "Chat",
+                select: { Messages: 1 }
+            })
+            .exec();
         if (!user)
         {
             throw new NotFoundError("user not found");
@@ -28,7 +33,7 @@ const sendMessage = async (socket: Socket, message: IMessageSender) =>
         user.Chat.save();
         user.save();
 
-        user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("receiveMessage", { Author: { Name: msg.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt }));
+        server.to(user.Chat._id.toString()).emit("receiveMessage", { Author: { Name: user.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt });
     }
     catch (error)
     {
@@ -43,7 +48,7 @@ const sendMessage = async (socket: Socket, message: IMessageSender) =>
     }
 }
 
-export default (socket: Socket) =>
+export default (server: Server, socket: Socket) =>
 {
-    socket.on("sendMessage", (message: any) => sendMessage(socket, message));
+    socket.on("sendMessage", (message: IMessageSender) => sendMessage(server, socket, message));
 }

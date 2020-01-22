@@ -91,49 +91,6 @@ const loginByChatId = async (req: Request, res: Response) =>
     }
 }
 
-const getMessagesByChatId = async (req: Request, res: Response) =>
-{
-    try
-    {
-        const id = mongoose.Types.ObjectId(req.params.id);
-        const projection = { Content: 1, Author: 1, CreatedAt: 1, _id: 0 };
-        const messages = await Message.find({ Chat: id }, projection).populate("Author", "Name -_id").lean().exec();
-        if (messages.length === 0)
-        {
-            res.sendStatus(404);
-        }
-        else
-        {
-            res.status(200).send(messages);
-        }
-    }
-    catch
-    {
-        res.sendStatus(500);
-    }
-}
-
-const getUsersByChatId = async (req: Request, res: Response) =>
-{
-    try
-    {
-        const id = mongoose.Types.ObjectId(req.params.id);
-        const users = await User.find({ Chat: id, IsActive: true }, { Name: 1, Status: 1, _id: 0 }).lean().exec();
-        if (users.length === 0)
-        {
-            res.sendStatus(404);
-        }
-        else
-        {
-            res.status(200).send(users);
-        }
-    }
-    catch
-    {
-        res.sendStatus(500);
-    }
-}
-
 const createNewChat = async (req: Request, res: Response) =>
 {
     const { Id, Name, Password, Host } = req.body;
@@ -162,21 +119,6 @@ const createNewChat = async (req: Request, res: Response) =>
     }
 }
 
-const removeChat = async (req: Request, res: Response) =>
-{
-    try
-    {
-        const id = mongoose.Types.ObjectId(req.params.id);
-        const chat = await Chat.findOne({ _id: id }).exec();
-        chat?.remove();
-        res.sendStatus(200);
-    }
-    catch
-    {
-        res.sendStatus(500);
-    }
-}
-
 export default class ChatController implements IController
 {
     private readonly name: string;
@@ -198,9 +140,6 @@ export default class ChatController implements IController
     public Router(): Router
     {
         this.chatRouter.get("/", getAll);
-        this.chatRouter.delete("/:id", removeChat);
-        this.chatRouter.get("/:id/users", getUsersByChatId);
-        this.chatRouter.get("/:id/messages", getMessagesByChatId);
         this.chatRouter.post("/", this.jsonParser, createNewChat);
         this.chatRouter.post("/:id", this.jsonParser, loginByChatId);
         return this.chatRouter;

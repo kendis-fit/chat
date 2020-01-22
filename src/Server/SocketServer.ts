@@ -2,7 +2,7 @@ import fs from "fs";
 import http from "http";
 import io, { Server, Socket } from "socket.io";
 
-type RunSocket = (socket: Socket) => void;
+type RunSocket = (server: Server, socket: Socket) => void;
 
 export default class SocketServer
 {
@@ -44,6 +44,6 @@ export default class SocketServer
 
     public Run(): void
     {
-        this.ioServer.on("connection", (socket: Socket) => this.listSockets.forEach(runSocket => runSocket(socket)));
+        this.ioServer.on("connection", (socket: Socket) => this.listSockets.forEach(runSocket => runSocket(this.ioServer, socket)));
     }
 }
