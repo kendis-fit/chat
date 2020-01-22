@@ -3,8 +3,7 @@ import React from "react";
 import { FlexBlock } from "../Styles/Blocks";
 
 const Chat = () => {
-
-    return (
+    return(
         <FlexBlock>
             Chat
         </FlexBlock>
