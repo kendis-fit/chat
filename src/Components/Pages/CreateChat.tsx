@@ -34,9 +34,11 @@ const CreateChat = (props: ICreatingChatAction) => {
         let hostConnection = io.connect("http://localhost:5000");
 
         hostConnection.on("connect", async () => {
+
             try
             {
                 const result = await ChatApi.Create({...chat, Id: hostConnection.id});
+                hostConnection.emit("joinToChat");
                 setChatId(result.ChatId);
                 props.SetConnection(hostConnection);
                 setIsSubmitChat(true);
