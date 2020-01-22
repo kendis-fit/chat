@@ -22,7 +22,11 @@ export const UserSchema = new Schema(
     Messages: [{
         type: Schema.Types.ObjectId,
         ref: "User"
-    }]
+    }],
+    SocketId: {
+        type: String,
+        required: true
+    }
 },
 {
     versionKey: false,

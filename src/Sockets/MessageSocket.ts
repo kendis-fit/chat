@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
 import { Socket } from "socket.io";
 
-// import Chat from "../Models/DB/Chat";
 import User from "../Models/DB/User";
 import Message from "../Models/DB/Message";
 import NotFoundError from "../Errors/NotFoundError";
@@ -11,9 +9,7 @@ const sendMessage = async (socket: Socket, message: IMessageSender) =>
 {
     try
     {
-        const senderId = mongoose.Types.ObjectId(socket.id);
-
-        const user: any = await User.findOne({ _id: senderId }).populate("Chat").exec();
+        const user: any = await User.findOne({ SocketId: socket.id }).populate("Chat").exec();
         if (!user)
         {
             throw new NotFoundError("user not found");
@@ -32,7 +28,7 @@ const sendMessage = async (socket: Socket, message: IMessageSender) =>
         user.Chat.save();
         user.save();
 
-        user.Chat.Users.forEach((usr: any) => socket.to(usr._id.toString()).emit("receiveMessage", { Author: { Name: msg.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt }));
+        user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("receiveMessage", { Author: { Name: msg.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt }));
     }
     catch (error)
     {

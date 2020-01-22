@@ -25,7 +25,7 @@ const getAll = async (req: Request, res: Response) =>
             const projection = { _id: 1, Name: 1, Users: 1, Password: 1 };
             const chatsWithOffset = await Chat.find({}, projection).skip(offsetN).limit(sizeN).lean().exec()
             const chatsResult = chatsWithOffset.map(c => ({
-                    _id: c._id,
+                    Id: c._id,
                     Name: c.Name,
                     Users: c.Users.length,
                     IsPassword: c.Password !== undefined
@@ -71,7 +71,7 @@ const loginByChatId = async (req: Request, res: Response) =>
         }
         else
         {
-            const user: any = new User({ _id: mongoose.Types.ObjectId(Id), Name: Login, Chat: chat._id });
+            const user: any = new User({ SocketId: Id, Name: Login, Chat: chat._id });
             const message: any = new Message({ Author: user._id, Chat: chat._id, Content: `User ${Login} has joined to chat` });
             
             chat.Users.push(user);
@@ -141,7 +141,7 @@ const createNewChat = async (req: Request, res: Response) =>
     try
     {
         const chat: any = new Chat({ Name, Password });
-        const user: any = new User({ _id: Id, Name: Host, Status: "admin", Chat: chat._id });
+        const user: any = new User({ SocketId: Id, Name: Host, Status: "admin", Chat: chat._id });
         const message: any = new Message({ Chat: chat._id, Author: user._id, Content: `Host ${Host} created chat.` });
 
         user.Messages.push(message._id);
