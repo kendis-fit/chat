@@ -13,7 +13,7 @@ const joinToChat = async (socket: Socket) =>
         const projectionChat = { _id: 0, Users: 1 };
         const projectionMessage = { _id: 0, Content: 1, CreatedAt: 1 };
 
-        const user: any = await User.findOne({ _id: socket.id }, projectionUser)
+        const user: any = await User.findOne({ SocketId: socket.id }, projectionUser)
             .populate({
                 path: "Chat",
                 populate: { path: "Users", select: projectionUsers },
@@ -57,14 +57,24 @@ const leftFromChat = async (socket: Socket) =>
 {
     try
     {
-        const user: any = await User.findOneAndUpdate({ _id: socket.id }, { IsActive: false }).populate("Chat").exec();
+        const user: any = await User.findOneAndUpdate({ SocketId: socket.id }, { $set: { IsActive: false }})
+            .populate({
+                path: "Chat",
+                populate: { path: "Users", select: { _id: 0, SocketId: 1 } }
+            })
+            .exec();
         if (!user)
         {
             throw new NotFoundError("user not found");
         }
         if (user.Status === "admin")
         {
-            user.Chat.Users.forEach((usr: any) => socket.to(usr.SocketId).emit("exitChat"));
+            user.Chat.Users.forEach((usr: any) => {
+                if (usr.SocketId !== socket.id)
+                {
+                    socket.to(usr.SocketId).emit("exitChat");
+                }
+            });
             user.Chat?.remove();
         }
         else 

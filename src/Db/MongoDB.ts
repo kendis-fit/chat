@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { ConnectionOptions } from "mongoose";
 
 export default class MongoDB
 {
     private readonly connectionString: string;
-    private readonly connectionOptions: any;
+    private readonly connectionOptions: ConnectionOptions;
 
     public constructor(connectionString: string, nameDatabase: string)
     {
@@ -11,7 +11,8 @@ export default class MongoDB
         this.connectionOptions = {
             dbName: nameDatabase,
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useFindAndModify: false
         }
     }
 
