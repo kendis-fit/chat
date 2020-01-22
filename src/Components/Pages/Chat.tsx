@@ -38,6 +38,9 @@ const Chat = (props: IInitChat) => {
         return <Redirect to="/chats" />
     }
 
+    if (initUsers.length === 0 || initMessages.length === 0)
+        return <div>Loading...</div>
+
     return(
         <FlexBlock>
             <ListUser Users={initUsers} Socket={props.Socket} />
