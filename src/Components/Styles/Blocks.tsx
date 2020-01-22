@@ -7,3 +7,7 @@ export const BlockCenter = styled.div<ISize>`
     width: ${props => props.Width};
     height: ${props => props.Height};
 `;
+
+export const FlexBlock = styled.div`
+    display: flex;
+`;
