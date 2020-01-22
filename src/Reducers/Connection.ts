@@ -5,7 +5,9 @@ type Action = {
     value: SocketIOClient.Socket
 }
 
-const Connection = (state = {}, action: Action) => {
+const initialState: SocketIOClient.Socket | null = null;
+
+const Connection = (state = initialState, action: Action) => {
     switch (action.type)
     {
         case SET_CONNECTION:
