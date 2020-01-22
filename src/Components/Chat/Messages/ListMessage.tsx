@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import ItemMessage from "./ItemMessage"
 import SendMessage from "./SendMessage";
 import IMessage from "../Interfaces/IMessage";
-import IListMessage from "../Interfaces/IListMessage";
+import IConnection from "../Interfaces/IConnection";
 
-const ListMessage = (props: IListMessage) => {
+const ListMessage = (props: IConnection) => {
 
-    const [messages, setMessages] = useState(props.Messages);
+    const [messages, setMessages] = useState<IMessage[]>([]);
 
     useEffect(() => {
         props.Socket.on("receiveMessage", (message: IMessage) => { 

@@ -2,8 +2,7 @@ import { connect } from "react-redux";
 
 import Chat from "../Components/Pages/Chat";
 
-const mapStateToProps = (state: any, ownProps: any) => ({
-    Id: ownProps.match.params.id,
+const mapStateToProps = (state: any) => ({
     Socket: state.Connection
 });
 

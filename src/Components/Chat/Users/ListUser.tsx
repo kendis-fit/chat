@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import ItemUser from "./ItemUser";
 import IUser from "../Interfaces/IUser";
-import IListUser from "../Interfaces/IListUser";
+import IConnection from "../Interfaces/IConnection";
 
-const ListUser = (props: IListUser) => {
+const ListUser = (props: IConnection) => {
 
-    const [users, setUsers] = useState(props.Users);
+    const [users, setUsers] = useState<IUser[]>([]);
 
     useEffect(() => {
 
