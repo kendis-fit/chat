@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 import ItemMessage from "./ItemMessage"
 import SendMessage from "./SendMessage";
 import IMessage from "../Interfaces/IMessage";
+import { FlexBlock } from "../../Styles/Blocks";
 import IConnection from "../Interfaces/IConnection";
+import FlexDirection from "../../../Constants/FlexDirection";
+import { BlockMessages, BlockCenterUsers } from "../../Styles/ChatView";
 
 const ListMessage = (props: IConnection) => {
 
@@ -18,14 +21,16 @@ const ListMessage = (props: IConnection) => {
     }, [messages, props]);
 
     return(
-        <>
-            <ul>
-                {
-                    messages.map((message, key) => <ItemMessage {...message} key={key} />)
-                }
-            </ul>
-            <SendMessage Socket={props.Socket} />
-        </>
+        <BlockCenterUsers>
+            <FlexBlock FlexDirection={FlexDirection.COLUMN}>
+                <BlockMessages>
+                    {
+                        messages.map((message, key) => <ItemMessage {...message} key={key} />)
+                    }
+                </BlockMessages>
+                <SendMessage Socket={props.Socket} />
+            </FlexBlock>
+        </BlockCenterUsers>
     );
 }
 

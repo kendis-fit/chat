@@ -4,7 +4,15 @@ import IMessage from "../Interfaces/IMessage";
 
 const ItemMessage = (props: IMessage) => {
     return(
-        <div> {props.Author ? props.Author.Name : ""}: {props.Content} created by {props.CreatedAt}</div>
+        <li> 
+            <div>
+                <span>{props.Author ? props.Author.Name : ""}</span>
+            </div>
+            <div>
+                {props.Content}
+                {new Date(props.CreatedAt).toLocaleTimeString()}
+            </div>
+        </li>   
     );
 }
 

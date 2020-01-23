@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import ISize from "./Interfaces/ISize";
+import IFlex from "./Interfaces/IFlex";
 
 export const BlockCenter = styled.div<ISize>`
     margin: 0 auto;
@@ -8,6 +9,7 @@ export const BlockCenter = styled.div<ISize>`
     height: ${props => props.Height};
 `;
 
-export const FlexBlock = styled.div`
+export const FlexBlock = styled.div<IFlex>`
     display: flex;
+    flex-direction: ${props => props.FlexDirection};
 `;

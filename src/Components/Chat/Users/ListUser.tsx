@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ItemUser from "./ItemUser";
 import IUser from "../Interfaces/IUser";
 import IConnection from "../Interfaces/IConnection";
+import { BlockUsers } from "../../Styles/ChatView";
 
 const ListUser = (props: IConnection) => {
 
@@ -15,11 +16,11 @@ const ListUser = (props: IConnection) => {
     }, [users, props]);
 
     return(
-        <ul>
+        <BlockUsers>
             {
                 users.map((user, key) => <ItemUser {...user} key={key} />)
             }
-        </ul>
+        </BlockUsers>
     );
 }
 
