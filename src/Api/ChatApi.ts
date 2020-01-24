@@ -35,4 +35,32 @@ export default class ChatApi
             throw error;
         }
     }
+
+    public static async GetUsersById(id: number)
+    {
+        try
+        {
+            const response = await fetch(`http://localhost:5000/chats/${id}/users`);
+            const listUsers = await response.json();
+            return listUsers;
+        }
+        catch (error)
+        {
+            throw error;
+        }
+    }
+
+    public static async GetMessagesById(id: number)
+    {
+        try
+        {
+            const response = await fetch(`http://localhost:5000/chats/${id}/messages`);
+            const listUsers = await response.json();
+            return listUsers;
+        }
+        catch (error)
+        {
+            throw error;
+        }
+    }
 }

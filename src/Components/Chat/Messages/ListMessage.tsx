@@ -1,37 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { RefObject } from "react";
 
 import ItemMessage from "./ItemMessage"
 import SendMessage from "./SendMessage";
 import IMessage from "../Interfaces/IMessage";
 import { FlexBlock } from "../../Styles/Blocks";
-import IConnection from "../Interfaces/IConnection";
+import IInitProps from "../Interfaces/IListMessage";
 import FlexDirection from "../../../Constants/FlexDirection";
 import { BlockMessages, BlockCenterUsers } from "../../Styles/ChatView";
 
-const ListMessage = (props: IConnection) => {
-
-    const [messages, setMessages] = useState<IMessage[]>([]);
-
-    useEffect(() => {
-        props.Socket.on("receiveMessage", (message: IMessage) => { 
-
-            setMessages([...messages, message])
-        });
-
-    }, [messages, props]);
-
-    return(
-        <BlockCenterUsers>
-            <FlexBlock FlexDirection={FlexDirection.COLUMN}>
-                <BlockMessages>
-                    {
-                        messages.map((message, key) => <ItemMessage {...message} key={key} />)
-                    }
-                </BlockMessages>
-                <SendMessage Socket={props.Socket} />
-            </FlexBlock>
-        </BlockCenterUsers>
-    );
+interface IListMessage
+{
+    Messages: IMessage[];
 }
 
-export default ListMessage;
+export default class ListMessage extends React.Component<IInitProps, IListMessage>
+{
+    private blockMessages: RefObject<HTMLUListElement>
+
+    constructor(props: IInitProps)
+    {
+        super(props);
+        this.state = {
+            Messages: this.props.Messages
+        };
+        this.blockMessages = React.createRef<HTMLUListElement>();
+        this.props.Socket.on("receiveMessage", (message: IMessage) => {
+            this.setState({ Messages: [...this.state.Messages, message] })
+            if (this.blockMessages.current)
+                this.blockMessages.current.scrollTop = this.blockMessages.current.scrollHeight;
+        });
+    }
+
+    render()
+    {
+
+        return(
+            <BlockCenterUsers>
+                <FlexBlock FlexDirection={FlexDirection.COLUMN}>
+                    <BlockMessages ref={this.blockMessages}>
+                        {
+                            this.state.Messages.map((message, key) => <ItemMessage {...message} key={key} />)
+                        }
+                    </BlockMessages>
+                    <SendMessage Socket={this.props.Socket} />
+                </FlexBlock>
+            </BlockCenterUsers>
+        );
+    }
+}
