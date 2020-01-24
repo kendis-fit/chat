@@ -12,7 +12,7 @@ import { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
 const CreateChat = (props: ICreatingChatAction) => {
 
     const [isSubmitChat, setIsSubmitChat] = useState(false);
-    const [showChat, setShowChat] = useState(false);
+    const [password, setPassword] = useState(false);
     const [chat, setChat] = useState<ICreatingChat>({
         Id: "",
         Name: "",
@@ -73,11 +73,11 @@ const CreateChat = (props: ICreatingChatAction) => {
                         <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} required={true} />
                     </BlockInputData>
                     <BlockInputData IsRequired={false}>
-                        <input id="IsPassword" type="checkbox" onClick={() => setShowChat(!showChat)} />
+                        <input id="IsPassword" type="checkbox" onClick={() => setPassword(!password)} />
                         <label htmlFor="IsPassword"> - Is Password</label>
                     </BlockInputData>
                     {
-                        showChat &&
+                        password &&
                         <BlockInputData IsRequired={true}>
                             <div>
                                 <label htmlFor="Password">Password</label>

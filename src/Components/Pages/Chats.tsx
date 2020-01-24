@@ -21,9 +21,9 @@ const Chats = () => {
             const newChats = await ChatApi.GetAll(chatOffset.Offset, chatOffset.Size);
             if (newChats.length !== 0)
             {
+                setIsFetching(false);
                 setChats([...chats, ...newChats]);
                 setChatOffset({ Offset: chatOffset.Offset + 20, Size: chatOffset.Size });
-                setIsFetching(false);
             }
             else
             {

@@ -18,7 +18,7 @@ interface IChatState
 
 interface IChatProps extends IConnection
 {
-    Id: number;
+    Id: string;
 }
 
 export default class Chat extends React.Component<IChatProps, IChatState>
