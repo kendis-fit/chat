@@ -1,4 +1,4 @@
-import ILogin from "../Components/Chats/Interfaces/ILogin";
+import ILogin from "../Components/LogIn/Interfaces/ILogin";
 import ICreatingChat from "../Components/Pages/Interfaces/ICreatingChat";
 
 export default class ChatApi

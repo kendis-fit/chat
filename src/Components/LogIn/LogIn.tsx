@@ -22,7 +22,7 @@ const LogIn = (props: ILogInProps) => {
         setUser(newUser);
     }
 
-    const LogInToChat = (e) => {
+    const LogInToChat = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const clientConnection = io.connect("http://localhost:5000");
@@ -53,7 +53,7 @@ const LogIn = (props: ILogInProps) => {
     return(
         <form onSubmit={LogInToChat}>
             <div>
-                <input type="text" placeholder="Nickname" onChange={(e) => SetUserByKey("Nickname", e.target.value)} />
+                <input type="text" placeholder="Nickname" onChange={(e) => SetUserByKey("Login", e.target.value)} />
             </div>
             {
                 props.IsPassword &&

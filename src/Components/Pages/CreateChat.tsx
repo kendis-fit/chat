@@ -6,7 +6,7 @@ import Menu from "../Menu";
 import ChatApi from "../../Api/ChatApi";
 import { BlockCenter } from "../Styles/Blocks";
 import ICreatingChat from "./Interfaces/ICreatingChat";
-import ICreatingChatAction from "./Interfaces/ICreatingChatAction";
+import ICreatingChatAction from "./Interfaces/IConnection";
 import { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
 
 const CreateChat = (props: ICreatingChatAction) => {

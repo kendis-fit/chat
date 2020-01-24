@@ -4,15 +4,23 @@ import Menu from "../Menu";
 import IChat from "./Interfaces/IChat";
 import ChatApi from "../../Api/ChatApi";
 import TableChat from "../Styles/TableChat";
+import LogInModal from "../LogIn/LogInModal";
 import IChatOffset from "./Interfaces/IChatOffset";
+import ISelectChat from "./Interfaces/ISelectChat";
 import useInfinityScroll from "../../Hooks/useInfinityScroll";
 
-const Chats = () => {
+interface IChatsProps
+{
+    SetChat: (chat: ISelectChat) => void;
+}
+
+const Chats = (props: IChatsProps) => {
 
     const [chatOffset, setChatOffset] = useState<IChatOffset>({ Offset: 0, Size: 20 });
     const [isFetching, setIsFetching] = useInfinityScroll(GetChats);
     const [chats, setChats] = useState<IChat[]>([]);
     const [isReadAllChats, setIsReadAllChats] = useState(false);
+    const [showLogin, setShowLogin] = useState({ Show: false, X: 0, Y: 0 });
 
     async function GetChats()
     {
@@ -32,6 +40,16 @@ const Chats = () => {
         }
     }
 
+    function ShowLogin(e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, chat: ISelectChat)
+    {
+        props.SetChat(chat);
+        setShowLogin({
+            Show: true,
+            X: e.screenX,
+            Y: e.screenY
+        });
+    }
+
     return (
         <>
             <Menu />
@@ -46,7 +64,7 @@ const Chats = () => {
                 <tbody>
                     {
                         chats.map((chat, key) =>
-                        <tr key={key} onClick={() => window.location.href = `/chats/${chat.Id}`}>
+                        <tr key={key} onClick={(e) => ShowLogin(e, { Id: chat.Id, IsPassword: chat.IsPassword })}>
                             <td>
                                 <span>{chat.Name}</span>
                             </td>
@@ -63,6 +81,9 @@ const Chats = () => {
             </TableChat>
             {
                 isFetching && !isReadAllChats && "Fetching more list items..."
+            }
+            {
+                showLogin.Show && <LogInModal X={showLogin.X} Y={showLogin.Y} />
             }
         </>
     );

@@ -3,8 +3,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import "../root.css";
 import Home from "./Pages/Home";
-import Chats from "./Pages/Chats";
 import ChatContainer from "../Containers/ChatContainer";
+import ChatsContainer from "../Containers/ChatsContainer";
 import { ProjectTitle, BlockProject } from "./Styles/Header";
 import CreateChatContainer from "../Containers/CreateChatContainer";
 
@@ -18,7 +18,7 @@ const App = () => {
 				<Switch>
 					<Route exact={true} path="/" component={Home} />
 					<Route path="/create" component={CreateChatContainer} />
-					<Route exact={true} path="/chats" component={Chats} />
+					<Route exact={true} path="/chats" component={ChatsContainer} />
 					<Route path="/chats/:id" component={ChatContainer} />
 				</Switch>
 			</BrowserRouter>
