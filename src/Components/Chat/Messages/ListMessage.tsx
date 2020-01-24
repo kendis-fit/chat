@@ -31,6 +31,14 @@ export default class ListMessage extends React.Component<IInitProps, IListMessag
         });
     }
 
+    componentDidMount()
+    {
+        if (this.blockMessages.current)
+        {
+            this.blockMessages.current.scrollTop = this.blockMessages.current.scrollHeight;
+        }
+    }
+
     render()
     {
 
