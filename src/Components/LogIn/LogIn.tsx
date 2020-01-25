@@ -53,12 +53,12 @@ const LogIn = (props: ILogInProps) => {
     return(
         <form onSubmit={LogInToChat}>
             <div>
-                <input type="text" placeholder="Nickname" onChange={(e) => SetUserByKey("Login", e.target.value)} />
+                <input type="text" placeholder="Nickname" onChange={(e) => SetUserByKey("Login", e.target.value)} required={true} />
             </div>
             {
                 props.IsPassword &&
                 <div>
-                    <input type="password" placeholder="Password" onChange={(e) => SetUserByKey("Password", e.target.value)} />
+                    <input type="password" placeholder="Password" onChange={(e) => SetUserByKey("Password", e.target.value)} required={true} />
                 </div>
             }
             <button>Log in</button>
