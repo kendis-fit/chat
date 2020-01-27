@@ -1,11 +1,11 @@
-import io from "socket.io-client";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
 import ChatApi from "../../Api/ChatApi";
 import ILogin from "./Interfaces/ILogin";
-import ILogInProps from "./Interfaces/ILogInProps";
 import { FormLogIn } from "./LogInStyle";
+import ILogInProps from "./Interfaces/ILogInProps";
+import CreateConnection from "../../Helpers/CreateConnection";
 
 const LogIn = (props: ILogInProps) => {
     
@@ -23,27 +23,20 @@ const LogIn = (props: ILogInProps) => {
         setUser(newUser);
     }
 
-    const LogInToChat = (e: React.FormEvent<HTMLFormElement>) => {
+    const LogInToChat = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const clientConnection = io.connect("http://localhost:5000");
-
-        clientConnection.on("connect", async () => {
-
-            try
-            {
-                // TO DO: exceptions
-                await ChatApi.LoginToChat(props.Id, {...user, Id: clientConnection.id});
-                clientConnection.emit("joinToChat");
-                props.SetConnection(clientConnection);
-                setIsSubmited(true);
-            }
-            catch (error)
-            {
-                clientConnection.disconnect();
-                alert(error.message);
-            }
-        });
+        try
+        {
+            const clientConnection = await CreateConnection();
+            await ChatApi.LoginToChat(props.Id, {...user, Id: clientConnection.id});
+            clientConnection.emit("joinToChat");
+            props.SetConnection(clientConnection);
+            setIsSubmited(true);
+        }
+        catch (error)
+        {
+            alert(error.message);
+        }
     }
 
     if (isSubmited)
