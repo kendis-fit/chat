@@ -37,21 +37,23 @@ export default class Chat extends React.Component<IChatProps, IChatState>
 
     async componentDidMount()
     {
-        const users = await ChatApi.GetUsersById(this.props.Id);
-        const messages = await ChatApi.GetMessagesById(this.props.Id);
-        this.setState({
-            Users: users,
-            Messages: messages,
-            IsFetched: true,
-        });
-    }
-
-    componentDidCatch(error: Error)
-    {
-        alert (error.message);
-        this.setState({
-            IsError: true
-        })
+        try
+        {
+            const users = await ChatApi.GetUsersById(this.props.Id);
+            const messages = await ChatApi.GetMessagesById(this.props.Id);
+            this.setState({
+                Users: users,
+                Messages: messages,
+                IsFetched: true,
+            });
+        }
+        catch (error)
+        {
+            alert (error.message);
+            this.setState({
+                IsError: true
+            });
+        }
     }
 
     private RedirectToHome()

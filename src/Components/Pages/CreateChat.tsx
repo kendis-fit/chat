@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
@@ -7,6 +6,7 @@ import ChatApi from "../../Api/ChatApi";
 import { BlockCenter } from "../Styles/Blocks";
 import ICreatingChat from "./Interfaces/ICreatingChat";
 import ICreatingChatAction from "./Interfaces/IConnection";
+import CreateConnection from "../../Helpers/CreateConnection";
 import { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
 
 const CreateChat = (props: ICreatingChatAction) => {
@@ -28,27 +28,24 @@ const CreateChat = (props: ICreatingChatAction) => {
         setChat(newChat);
     }
 
-    const createChat = (e: React.FormEvent) => {
+    const createChat = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        let hostConnection = io.connect("http://localhost:5000");
-
-        hostConnection.on("connect", async () => {
-
-            try
-            {
-                const result = await ChatApi.Create({...chat, Id: hostConnection.id});
-                hostConnection.emit("joinToChat");
-                setChatId(result.ChatId);
-                props.SetConnection(hostConnection);
-                setIsSubmitChat(true);
-            }
-            catch (error)
-            {
-                hostConnection.disconnect();
-                alert(error.message);
-            }
-        });
+        let hostConnection: SocketIOClient.Socket | undefined;
+        try
+        {
+            hostConnection = await CreateConnection();
+            const result = await ChatApi.Create({...chat, Id: hostConnection.id});
+            hostConnection.emit("joinToChat");
+            setChatId(result.ChatId);
+            props.SetConnection(hostConnection);
+            setIsSubmitChat(true);
+        }
+        catch (error)
+        {
+            hostConnection?.disconnect();
+            alert(error.message);
+        }
     }
     
     if (isSubmitChat) {

@@ -25,9 +25,11 @@ const LogIn = (props: ILogInProps) => {
 
     const LogInToChat = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        let clientConnection: SocketIOClient.Socket | undefined;
         try
         {
-            const clientConnection = await CreateConnection();
+            clientConnection = await CreateConnection();
             await ChatApi.LoginToChat(props.Id, {...user, Id: clientConnection.id});
             clientConnection.emit("joinToChat");
             props.SetConnection(clientConnection);
@@ -35,6 +37,7 @@ const LogIn = (props: ILogInProps) => {
         }
         catch (error)
         {
+            clientConnection?.disconnect();
             alert(error.message);
         }
     }
