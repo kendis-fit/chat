@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 import ChatApi from "../../Api/ChatApi";
 import ILogin from "./Interfaces/ILogin";
 import ILogInProps from "./Interfaces/ILogInProps";
+import { FormLogIn } from "./LogInStyle";
 
 const LogIn = (props: ILogInProps) => {
     
@@ -51,7 +52,10 @@ const LogIn = (props: ILogInProps) => {
     }
 
     return(
-        <form onSubmit={LogInToChat}>
+        <FormLogIn onSubmit={LogInToChat}>
+            <div>
+                <span>Chat</span>
+            </div>
             <div>
                 <input type="text" placeholder="Nickname" onChange={(e) => SetUserByKey("Login", e.target.value)} required={true} />
             </div>
@@ -61,8 +65,10 @@ const LogIn = (props: ILogInProps) => {
                     <input type="password" placeholder="Password" onChange={(e) => SetUserByKey("Password", e.target.value)} required={true} />
                 </div>
             }
-            <button>Log in</button>
-        </form>
+            <div>
+                <button>Log in</button>
+            </div>
+        </FormLogIn>
     );
 }
 

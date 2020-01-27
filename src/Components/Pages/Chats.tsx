@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, createRef } from "react";
 
 import Menu from "../Menu";
 import IChat from "./Interfaces/IChat";
@@ -20,7 +20,7 @@ const Chats = (props: IChatsProps) => {
     const [isFetching, setIsFetching] = useInfinityScroll(GetChats);
     const [chats, setChats] = useState<IChat[]>([]);
     const [isReadAllChats, setIsReadAllChats] = useState(false);
-    const [showLogin, setShowLogin] = useState({ Show: false, X: 0, Y: 0 });
+    const [showLogin, setShowLogin] = useState({ Show: false, X: "0", Y: "0" });
 
     async function GetChats()
     {
@@ -40,13 +40,19 @@ const Chats = (props: IChatsProps) => {
         }
     }
 
-    function ShowLogin(e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, chat: ISelectChat)
+    function ShowLogin(e: React.RefObject<HTMLTableRowElement>, chat: ISelectChat)
     {
+        if (e.current === null) return;
+
+        const rect = e.current.getBoundingClientRect();
+        const x = rect.left;
+        const y = rect.bottom;
+
         props.SetChat(chat);
         setShowLogin({
             Show: true,
-            X: e.screenX,
-            Y: e.screenY
+            X: x + "px",
+            Y: y + "px"
         });
     }
 
@@ -63,8 +69,11 @@ const Chats = (props: IChatsProps) => {
                 </thead>
                 <tbody>
                     {
-                        chats.map((chat, key) =>
-                        <tr key={key} onClick={(e) => ShowLogin(e, { Id: chat.Id, IsPassword: chat.IsPassword })}>
+                        chats.map((chat, key) => {
+
+                            const ref = createRef<HTMLTableRowElement>();
+
+                            return <tr key={key} ref={ref} onClick={(e) => ShowLogin(ref, { Id: chat.Id, IsPassword: chat.IsPassword })}>
                             <td>
                                 <span>{chat.Name}</span>
                             </td>
@@ -75,7 +84,7 @@ const Chats = (props: IChatsProps) => {
                                 <span>{chat.IsPassword ? "Yes" : "No"}</span>
                             </td>
                         </tr>
-                        )
+                        })
                     }
                 </tbody>
             </TableChat>
