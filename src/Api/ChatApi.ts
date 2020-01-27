@@ -7,7 +7,7 @@ export default class ChatApi
     {
         try
         {
-            const response = await fetch("http://localhost:5000/chats", {
+            const response = await fetch(`${process.env["REACT_APP_API"]}/chats`, {
                 body: JSON.stringify(chat),
                 method: "POST",
                 headers: {
@@ -27,7 +27,7 @@ export default class ChatApi
     {
         try
         {
-            const response = await fetch(`http://localhost:5000/chats?offset=${offset}&size=${size}`);
+            const response = await fetch(`${process.env["REACT_APP_API"]}/chats?offset=${offset}&size=${size}`);
             const listChat = await response.json();
             return listChat;
         }
@@ -41,7 +41,7 @@ export default class ChatApi
     {
         try
         {
-            const response = await fetch(`http://localhost:5000/chats/${id}/users`);
+            const response = await fetch(`${process.env["REACT_APP_API"]}/chats/${id}/users`);
             const listUsers = await response.json();
             return listUsers;
         }
@@ -55,7 +55,7 @@ export default class ChatApi
     {
         try
         {
-            const response = await fetch(`http://localhost:5000/chats/${id}/messages`);
+            const response = await fetch(`${process.env["REACT_APP_API"]}/chats/${id}/messages`);
             const listUsers = await response.json();
             return listUsers;
         }
@@ -69,7 +69,7 @@ export default class ChatApi
     {
         try
         {
-            const response = await fetch(`http://localhost:5000/chats/${id}`, {
+            const response = await fetch(`${process.env["REACT_APP_API"]}/chats/${id}`, {
                 body: JSON.stringify(user),
                 method: "POST",
                 headers: {

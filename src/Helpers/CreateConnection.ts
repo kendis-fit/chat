@@ -3,7 +3,7 @@ import io from "socket.io-client";
 export default (): Promise<SocketIOClient.Socket> => {
     return new Promise((res, rej) => {
 
-        const connection = io.connect("http://localhost:5000");
+        const connection = io.connect(`${process.env["REACT_APP_API"]}`);
         const timeoutConnection = setTimeout(() => {
             connection.close();
             rej(new Error("Connection timeout"));
