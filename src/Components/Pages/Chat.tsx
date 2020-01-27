@@ -14,6 +14,7 @@ interface IChatState
     Users: IUser[];
     Messages: IMessage[];
     IsFetched: boolean;
+    IsError: boolean;
 }
 
 interface IChatProps extends IConnection
@@ -29,7 +30,8 @@ export default class Chat extends React.Component<IChatProps, IChatState>
         this.state = {
             Users: [],
             Messages: [],
-            IsFetched: false
+            IsFetched: false,
+            IsError: false
         }
     }
 
@@ -40,8 +42,16 @@ export default class Chat extends React.Component<IChatProps, IChatState>
         this.setState({
             Users: users,
             Messages: messages,
-            IsFetched: true
+            IsFetched: true,
         });
+    }
+
+    componentDidCatch(error: Error)
+    {
+        alert (error.message);
+        this.setState({
+            IsError: true
+        })
     }
 
     private RedirectToHome()
