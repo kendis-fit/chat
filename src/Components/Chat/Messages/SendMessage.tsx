@@ -15,14 +15,14 @@ const SendMessage = (props: IConnection) => {
     }
 
     function sendMessageByEnter(e: React.KeyboardEvent) {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 && content.length > 0) {
             sendMessage();
         }
     }
 
     return(
         <BlockSendMessage>
-            <textarea value={content} onKeyDown={sendMessageByEnter} onChange={e => setContent(e.target.value)}></textarea>
+            <textarea placeholder="write a message" value={content} onKeyDown={sendMessageByEnter} onChange={e => setContent(e.target.value)}></textarea>
             <button onClick={sendMessage}>Send message</button>
         </BlockSendMessage>
     );
