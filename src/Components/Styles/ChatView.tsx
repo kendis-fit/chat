@@ -55,13 +55,16 @@ export const ButtonShowUsers = styled.button`
     color: white;
 
     @media screen and (max-width: 643px) {
-        display: none;
+        position: absolute;
+        width: 100vw;
+        top: 100px;
+        display: block;
         border: 0;
         cursor: pointer;
-        align-items: center;
+        text-align: center;
         background: ${Colors.Gray};
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        font-size: 20px;
     }
 `;
 
