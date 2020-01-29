@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { FormikValues, useFormik } from "formik";
 
 import Menu from "../Menu";
 import ChatApi from "../../Api/ChatApi";
@@ -13,29 +14,24 @@ const CreateChat = (props: ICreatingChatAction) => {
 
     const [isSubmitChat, setIsSubmitChat] = useState(false);
     const [password, setPassword] = useState(false);
-    const [chat, setChat] = useState<ICreatingChat>({
-        Id: "",
-        Name: "",
-        Host: ""
-    });
     const [chatId, setChatId] = useState("");
 
-    const setChatByKey = (key: string, value: string): void => {
+    const formik = useFormik({
+        initialValues: {
+            Name: "",
+            Host: "",
+            Password: ""
+        },
+        onSubmit: values => createChat(values)
+    });
 
-        let newChat = {...chat};
-        newChat[key] = value;
-
-        setChat(newChat);
-    }
-
-    const createChat = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const createChat = async (values: FormikValues) => {
 
         let hostConnection: SocketIOClient.Socket | undefined;
         try
         {
             hostConnection = await CreateConnection();
-            const result = await ChatApi.Create({...chat, Id: hostConnection.id});
+            const result = await ChatApi.Create({...values, Id: hostConnection.id} as ICreatingChat);
             hostConnection.emit("joinToChat");
             setChatId(result.ChatId);
             props.SetConnection(hostConnection);
@@ -56,18 +52,18 @@ const CreateChat = (props: ICreatingChatAction) => {
         <>
             <Menu />
             <BlockCenter Width="250px">
-                <form onSubmit={createChat}>
+                <form onSubmit={formik.handleSubmit}>
                     <BlockInputData IsRequired={true}>
                         <div>
                             <label htmlFor="Host">Host</label>
                         </div>
-                        <input id="Host" type="text" minLength={4} onChange={(e) => setChatByKey("Host", e.target.value)} required={true} />
+                        <input id="Host" name="Host" type="text" minLength={4} onChange={formik.handleChange} value={formik.values.Host} required={true} />
                     </BlockInputData>
                     <BlockInputData IsRequired={true}>
                         <div>
                             <label htmlFor="Name">Server name</label>
                         </div>
-                        <input id="Name" type="text" minLength={4} onChange={(e) => setChatByKey("Name", e.target.value)} required={true} />
+                        <input id="Name" name="Name" type="text" minLength={4} onChange={formik.handleChange} value={formik.values.Name} required={true} />
                     </BlockInputData>
                     <BlockInputData IsRequired={false}>
                         <input id="IsPassword" type="checkbox" onClick={() => setPassword(!password)} />
@@ -79,7 +75,7 @@ const CreateChat = (props: ICreatingChatAction) => {
                             <div>
                                 <label htmlFor="Password">Password</label>
                             </div>
-                            <input id="Password" type="password" minLength={5} onChange={(e) => setChatByKey("Password", e.target.value)} required={true} />
+                            <input id="Password" name="Password" type="password" minLength={5} onChange={formik.handleChange} value={formik.values.Password} required={true} />
                         </BlockInputData>
                     }
                     <BlockSendData>
