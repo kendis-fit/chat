@@ -74,7 +74,7 @@ const Chats = (props: IChatsProps) => {
 
                                 const ref = createRef<HTMLTableRowElement>();
 
-                                return <tr key={key} ref={ref} onClick={(e) => ShowLogin(ref, { Id: chat.Id, IsPassword: chat.IsPassword })}>
+                                return <tr key={key} ref={ref} onClick={() => ShowLogin(ref, { Id: chat.Id, IsPassword: chat.IsPassword })}>
                                 <td>
                                     <span>{chat.Name}</span>
                                 </td>

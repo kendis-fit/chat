@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import { useFormik, FormikValues } from "formik";
+import { Formik, Field, FormikValues } from "formik";
 
 import ChatApi from "../../Api/ChatApi";
 import ILogin from "./Interfaces/ILogin";
@@ -8,17 +8,14 @@ import { FormLogIn } from "./LogInStyle";
 import ILogInProps from "./Interfaces/ILogInProps";
 import CreateConnection from "../../Helpers/CreateConnection";
 
+const initialValues: ILogin = {
+    Id: "",
+    Login: ""
+}
+
 const LogIn = (props: ILogInProps) => {
     
     const [isSubmited, setIsSubmited] = useState(false);
-
-    const formik = useFormik({
-        initialValues: {
-            Login: "",
-            Password: ""
-        },
-        onSubmit: values => LogInToChat(values)
-    });
 
     const LogInToChat = async (values: FormikValues) => {
 
@@ -44,23 +41,25 @@ const LogIn = (props: ILogInProps) => {
     }
 
     return(
-        <FormLogIn onSubmit={formik.handleSubmit}>
-            <div>
-                <span>Chat</span>
-            </div>
-            <div>
-                <input type="text" name="Login" placeholder="Nickname" onChange={formik.handleChange} value={formik.values.Login} required={true} />
-            </div>
-            {
-                props.IsPassword &&
+        <Formik initialValues={initialValues} onSubmit={LogInToChat}>
+            <FormLogIn>
                 <div>
-                    <input type="password" name="Password" placeholder="Password" onChange={formik.handleChange} value={formik.values.Password} required={true} />
+                    <span>Chat</span>
                 </div>
-            }
-            <div>
-                <button>Log in</button>
-            </div>
-        </FormLogIn>
+                <div>
+                    <Field type="text" name="Login" placeholder="Nickname" required={true} />
+                </div>
+                {
+                    props.IsPassword &&
+                    <div>
+                        <Field type="password" name="Password" placeholder="Password" required={true} />
+                    </div>
+                }
+                <div>
+                    <button>Log in</button>
+                </div>
+            </FormLogIn>
+        </Formik>
     );
 }
 

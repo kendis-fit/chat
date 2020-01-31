@@ -1,3 +1,4 @@
+import { Form } from "formik";
 import styled from "styled-components";
 
 import Colors from "../../Constants/Colors";
@@ -15,7 +16,7 @@ export const ModalLogIn = styled.div<IPosition>`
     background: ${Colors.LightGray};
 `;
 
-export const FormLogIn = styled.form`
+export const FormLogIn = styled(Form)`
 
     display: flex;
     flex-direction: column;

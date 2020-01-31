@@ -52,15 +52,11 @@ const CreateChat = (props: ICreatingChatAction) => {
                 <Formik initialValues={initialValues} onSubmit={createChat}>
                     <Form>
                         <BlockInputData IsRequired={true}>
-                            <div>
-                                <label htmlFor="Host">Host</label>
-                            </div>
+                            <label htmlFor="Host">Host</label>
                             <Field id="Host" name="Host" type="text" minLength={4} required={true} />
                         </BlockInputData>
                         <BlockInputData IsRequired={true}>
-                            <div>
-                                <label htmlFor="Name">Server name</label>
-                            </div>
+                            <label htmlFor="Name">Server name</label>
                             <Field id="Name" name="Name" type="text" minLength={4} required={true} />
                         </BlockInputData>
                         <BlockInputData IsRequired={false}>
@@ -70,9 +66,7 @@ const CreateChat = (props: ICreatingChatAction) => {
                         {
                             password &&
                             <BlockInputData IsRequired={true}>
-                                <div>
-                                    <label htmlFor="Password">Password</label>
-                                </div>
+                                <label htmlFor="Password">Password</label>
                                 <Field id="Password" name="Password" type="password" minLength={5} required={true} />
                             </BlockInputData>
                         }
