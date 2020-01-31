@@ -75,7 +75,7 @@ export default class Chat extends React.Component<IChatProps, IChatState>
 
     render()
     {
-        if (this.props.Socket === null)
+        if (this.props.Socket === null || this.state.IsError)
         {
             return this.RedirectToHome();
         }

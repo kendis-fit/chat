@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import { FormikValues, useFormik } from "formik";
+import { Formik, Form, Field, FormikValues } from "formik";
 
 import Menu from "../Menu";
 import ChatApi from "../../Api/ChatApi";
@@ -10,20 +10,17 @@ import ICreatingChatAction from "./Interfaces/IConnection";
 import CreateConnection from "../../Helpers/CreateConnection";
 import { BlockInputData, BlockSendData } from "../Styles/FormCreateChat";
 
+const initialValues: ICreatingChat = {
+    Id: "",
+    Name: "",
+    Host: ""
+}
+
 const CreateChat = (props: ICreatingChatAction) => {
 
     const [isSubmitChat, setIsSubmitChat] = useState(false);
     const [password, setPassword] = useState(false);
     const [chatId, setChatId] = useState("");
-
-    const formik = useFormik({
-        initialValues: {
-            Name: "",
-            Host: "",
-            Password: ""
-        },
-        onSubmit: values => createChat(values)
-    });
 
     const createChat = async (values: FormikValues) => {
 
@@ -52,36 +49,38 @@ const CreateChat = (props: ICreatingChatAction) => {
         <>
             <Menu />
             <BlockCenter Width="250px">
-                <form onSubmit={formik.handleSubmit}>
-                    <BlockInputData IsRequired={true}>
-                        <div>
-                            <label htmlFor="Host">Host</label>
-                        </div>
-                        <input id="Host" name="Host" type="text" minLength={4} onChange={formik.handleChange} value={formik.values.Host} required={true} />
-                    </BlockInputData>
-                    <BlockInputData IsRequired={true}>
-                        <div>
-                            <label htmlFor="Name">Server name</label>
-                        </div>
-                        <input id="Name" name="Name" type="text" minLength={4} onChange={formik.handleChange} value={formik.values.Name} required={true} />
-                    </BlockInputData>
-                    <BlockInputData IsRequired={false}>
-                        <input id="IsPassword" type="checkbox" onClick={() => setPassword(!password)} />
-                        <label htmlFor="IsPassword"> - Is Password</label>
-                    </BlockInputData>
-                    {
-                        password &&
+                <Formik initialValues={initialValues} onSubmit={createChat}>
+                    <Form>
                         <BlockInputData IsRequired={true}>
                             <div>
-                                <label htmlFor="Password">Password</label>
+                                <label htmlFor="Host">Host</label>
                             </div>
-                            <input id="Password" name="Password" type="password" minLength={5} onChange={formik.handleChange} value={formik.values.Password} required={true} />
+                            <Field id="Host" name="Host" type="text" minLength={4} required={true} />
                         </BlockInputData>
-                    }
-                    <BlockSendData>
-                        <button type="submit">Create</button>
-                    </BlockSendData>
-                </form>
+                        <BlockInputData IsRequired={true}>
+                            <div>
+                                <label htmlFor="Name">Server name</label>
+                            </div>
+                            <Field id="Name" name="Name" type="text" minLength={4} required={true} />
+                        </BlockInputData>
+                        <BlockInputData IsRequired={false}>
+                            <input id="IsPassword" type="checkbox" onClick={() => setPassword(!password)} />
+                            <label htmlFor="IsPassword"> - Is Password</label>
+                        </BlockInputData>
+                        {
+                            password &&
+                            <BlockInputData IsRequired={true}>
+                                <div>
+                                    <label htmlFor="Password">Password</label>
+                                </div>
+                                <Field id="Password" name="Password" type="password" minLength={5} required={true} />
+                            </BlockInputData>
+                        }
+                        <BlockSendData>
+                            <button type="submit">Create</button>
+                        </BlockSendData>
+                    </Form>
+                </Formik>
             </BlockCenter>
         </>
     );

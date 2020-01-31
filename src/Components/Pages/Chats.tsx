@@ -59,35 +59,37 @@ const Chats = (props: IChatsProps) => {
     return (
         <>
             <Menu />
-            <TableChat>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Amount users</th>
-                        <th>Is password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        chats.map((chat, key) => {
-
-                            const ref = createRef<HTMLTableRowElement>();
-
-                            return <tr key={key} ref={ref} onClick={(e) => ShowLogin(ref, { Id: chat.Id, IsPassword: chat.IsPassword })}>
-                            <td>
-                                <span>{chat.Name}</span>
-                            </td>
-                            <td>
-                                <span>{chat.Users}</span>
-                            </td>
-                            <td>
-                                <span>{chat.IsPassword ? "Yes" : "No"}</span>
-                            </td>
+            {
+                chats.length !== 0 ? <TableChat>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount users</th>
+                            <th>Is password</th>
                         </tr>
-                        })
-                    }
-                </tbody>
-            </TableChat>
+                    </thead>
+                    <tbody>
+                        {
+                            chats.map((chat, key) => {
+
+                                const ref = createRef<HTMLTableRowElement>();
+
+                                return <tr key={key} ref={ref} onClick={(e) => ShowLogin(ref, { Id: chat.Id, IsPassword: chat.IsPassword })}>
+                                <td>
+                                    <span>{chat.Name}</span>
+                                </td>
+                                <td>
+                                    <span>{chat.Users}</span>
+                                </td>
+                                <td>
+                                    <span>{chat.IsPassword ? "Yes" : "No"}</span>
+                                </td>
+                            </tr>
+                            })
+                        }
+                    </tbody>
+                </TableChat> : "There aren't chats"
+            }
             {
                 isFetching && !isReadAllChats && "Fetching more list items..."
             }

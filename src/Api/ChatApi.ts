@@ -14,8 +14,12 @@ export default class ChatApi
                     "Content-Type": "application/json; charset=utf-8"
                 },
             });
-            const chatId = await response.json();
-            return chatId;
+            if (response.ok)
+            {
+                const chatId = await response.json();
+                return chatId;
+            }
+            throw new Error("Not found");
         }
         catch (error)
         {
