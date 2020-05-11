@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "a simple chat",
   "scripts": {
-    "start": "tsc && node ./dist/index.js"
+    "build": "tsc",
+    "prestart": "tsc",
+    "start": "node ./dist/index.js"
   },
   "author": "Kurt Endless",
   "license": "ISC",
