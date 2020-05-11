@@ -1,0 +1,24 @@
+version: "3"
+services: 
+    web:
+        container_name: chat.js
+        image: node
+        working_dir: /home/node/app
+        volumes:
+            - ./:/home/node/app
+        command: "npm start"
+        restart: always
+        ports: 
+            - "3000:3000"
+        depends_on:
+            - db
+        env_file:
+            - .env
+        environment: 
+            - CONNECTION_STRING=mongodb://mongo:27017
+    db:
+        container_name: mongo
+        restart: always
+        image: mongo:latest
+        ports:
+            - "27017:27017"
