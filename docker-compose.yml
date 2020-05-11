@@ -1,0 +1,18 @@
+version: "3.4"
+services:
+    api:
+        build: ./api
+        restart: always
+        ports: 
+            - 3000:3000
+        depends_on:
+            - db
+        environment: 
+            - PORT=3000
+            - CONNECTION_STRING=mongodb://mongo:27017
+    db:
+        container_name: mongo
+        restart: always
+        image: mongo:4.2-bionic
+        ports:
+            - 27017:27017
