@@ -6,6 +6,7 @@ services:
             dockerfile: Dockerfile
             args: 
                 - REACT_APP_CHAT_API=http://localhost:5000
+                - REACT_APP_CHAT_SOCKET_SERVER=http://localhost:5000
         restart: always
         ports:
             - 3000:80
