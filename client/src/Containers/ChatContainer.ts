@@ -7,6 +7,6 @@ const mapStateToProps = (state: any, hasOwnProps: any) => ({
     Id: hasOwnProps.match.params.id
 });
 
-const ChatContainer = connect(mapStateToProps, null)(Chat);
+const ChatContainer = connect(mapStateToProps, null);
 
-export default ChatContainer;
+export default ChatContainer(Chat);

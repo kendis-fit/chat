@@ -1,61 +1,40 @@
-import React, { createRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import ItemUser from "./ItemUser";
 import IUser from "../Interfaces/IUser";
 import IInitProps from "../Interfaces/IListUser";
 import { BlockUsers, ButtonShowUsers, CloseListUsers } from "../../Styles/ChatView";
 
-interface IListUser
-{
-    Users: IUser[];
-    Show: boolean;
+const ListUser = (props: IInitProps) => {
+
+    const [users, setUsers] = useState(props.Users);
+    const [show, setShow] = useState(false);
+    const listUsers = useRef<HTMLUListElement>(null);
+
+    useEffect(() => {
+
+        props.Socket.on("receiveUser", (user: IUser) => setUsers([...users, user]));
+        props.Socket.on("leftUser", (name: string) => setUsers(users.filter(user => user.Name !== name)));
+        props.Socket.on("exitChat", () => {
+            alert("Host has left from the chat");
+            window.location.href = "/chats";
+        });
+        // eslint-disable-next-line
+    }, [props.Socket]);
+
+    return(
+        <>
+            <BlockUsers Show={show} ref={listUsers}>
+                {
+                    show && <CloseListUsers onClick={() => setShow(false)}>&times;</CloseListUsers>
+                }
+                {
+                    users.map((user, key) => <ItemUser {...user} key={key} />)
+                }
+            </BlockUsers>
+            <ButtonShowUsers onClick={() => setShow(true)}>Show users</ButtonShowUsers>
+        </>
+    );
 }
 
-export default class ListUser extends React.Component<IInitProps, IListUser> 
-{
-    private listUsers: React.RefObject<HTMLUListElement>;
-
-    constructor(props: IInitProps)
-    {
-        super(props);
-        this.state = {
-            Users: this.props.Users,
-            Show: false
-        };
-        this.props.Socket.on("receiveUser", (user: IUser) => this.setState((state) => ({ Users: [...state.Users, user] })));
-        this.props.Socket.on("leftUser", (name: string) => this.setState((state) => ({ Users: state.Users.filter(user => user.Name !== name) })));
-        this.props.Socket.on("exitChat", this.LeaveChat);
-    
-        this.listUsers = createRef<HTMLUListElement>();
-    }
-
-    LeaveChat()
-    {
-        alert("Host has left from the chat");
-        window.location.href = "/chats";
-    }
-
-    set VisibleUsers(isVisible: boolean)
-    {
-        this.setState((state) => ({
-            ...state, Show: isVisible
-        }));
-    }
-
-    render() 
-    {
-        return(
-            <>
-                <BlockUsers Show={this.state.Show} ref={this.listUsers}>
-                    {
-                        this.state.Show && <CloseListUsers onClick={() => this.VisibleUsers = false}>&times;</CloseListUsers>
-                    }
-                    {
-                        this.state.Users.map((user, key) => <ItemUser {...user} key={key} />)
-                    }
-                </BlockUsers>
-                <ButtonShowUsers onClick={() => this.VisibleUsers = true}>Show users</ButtonShowUsers>
-            </>
-        );
-    }
-}
+export default ListUser;

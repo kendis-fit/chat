@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
 import ChatApi from "../../Api/ChatApi";
@@ -22,63 +22,46 @@ interface IChatProps extends IConnection
     Id: string;
 }
 
-export default class Chat extends React.Component<IChatProps, IChatState>
-{
-    constructor(props: IChatProps)
-    {
-        super(props);
-        this.state = {
-            Users: [],
-            Messages: [],
-            IsFetched: false,
-            IsError: false
-        }
-    }
+const Chat = (props: IChatProps) => {
 
-    async componentDidMount()
-    {
-        try
-        {
-            const users = await ChatApi.GetUsersById(this.props.Id);
-            const messages = await ChatApi.GetMessagesById(this.props.Id);
-            this.setState({
-                Users: users,
-                Messages: messages,
-                IsFetched: true,
-            });
-        }
-        catch (error)
-        {
-            alert (error.message);
-            this.setState({
-                IsError: true
-            });
-        }
-    }
+    const [users, setUsers] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
-    private RedirectToHome()
+    useEffect(() => {
+
+        const initData = async () => {
+
+            try {
+                setUsers(await ChatApi.GetUsersById(props.Id));
+                setMessages(await ChatApi.GetMessagesById(props.Id));
+                setLoading(false);
+            } catch (error) {
+                alert(error.message);
+                setError(true);
+            }
+        }
+        initData();
+        // eslint-disable-next-line
+    }, []);
+
+    if (props.Socket === null || error)
     {
         return <Redirect to="/chats" />
     }
 
-    private RenderChat()
+    if (loading)
     {
-        if (this.state.IsFetched)
-        return(
-            <FlexBlock>
-                <ListUser Users={this.state.Users} Socket={this.props.Socket} />
-                <ListMessage Messages={this.state.Messages} Socket={this.props.Socket} />
-            </FlexBlock>
-        );
-        return "Loading...";
+        return <div>"Loading..."</div>;
     }
 
-    render()
-    {
-        if (this.props.Socket === null || this.state.IsError)
-        {
-            return this.RedirectToHome();
-        }
-        return this.RenderChat();
-    }
+    return (
+        <FlexBlock>
+            <ListUser Users={users} Socket={props.Socket} />
+            <ListMessage Messages={messages} Socket={props.Socket} />
+        </FlexBlock>
+    );
 }
+
+export default Chat;

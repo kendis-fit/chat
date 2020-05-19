@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import ItemMessage from "./ItemMessage"
 import SendMessage from "./SendMessage";
@@ -13,46 +13,40 @@ interface IListMessage
     Messages: IMessage[];
 }
 
-export default class ListMessage extends React.Component<IInitProps, IListMessage>
-{
-    private blockMessages: RefObject<HTMLUListElement>
+const ListMessage = (props: IInitProps) => {
 
-    constructor(props: IInitProps)
-    {
-        super(props);
-        this.state = {
-            Messages: this.props.Messages
-        };
-        this.blockMessages = React.createRef<HTMLUListElement>();
-        this.props.Socket.on("receiveMessage", (message: IMessage) => {
-            this.setState({ Messages: [...this.state.Messages, message] })
-            if (this.blockMessages.current)
-                this.blockMessages.current.scrollTop = this.blockMessages.current.scrollHeight;
-        });
-    }
+    const [messages, setMessages] = useState<IMessage[]>([]);
+    const blockMessages = useRef<HTMLUListElement>(null);
 
-    componentDidMount()
-    {
-        if (this.blockMessages.current)
-        {
-            this.blockMessages.current.scrollTop = this.blockMessages.current.scrollHeight;
+    useEffect(() => {
+
+        const scrollDown = () => {
+            if (blockMessages.current)
+            {
+                blockMessages.current.scrollTop = blockMessages.current.scrollHeight;
+            }
         }
-    }
+        scrollDown();
 
-    render()
-    {
+        props.Socket.on("receiveMessage", (message: IMessage) => {
+            setMessages([...messages, message]);
+            scrollDown();
+        });
+        // eslint-disable-next-line
+    }, [props.Socket]);
 
-        return(
-            <BlockCenterUsers>
-                <FlexBlock FlexDirection={FlexDirection.COLUMN}>
-                    <BlockMessages ref={this.blockMessages}>
-                        {
-                            this.state.Messages.map((message, key) => <ItemMessage {...message} key={key} />)
-                        }
-                    </BlockMessages>
-                    <SendMessage Socket={this.props.Socket} />
-                </FlexBlock>
-            </BlockCenterUsers>
-        );
-    }
+    return(
+        <BlockCenterUsers>
+            <FlexBlock FlexDirection={FlexDirection.COLUMN}>
+                <BlockMessages ref={blockMessages}>
+                    {
+                        messages.map((message, key) => <ItemMessage {...message} key={key} />)
+                    }
+                </BlockMessages>
+                <SendMessage Socket={props.Socket} />
+            </FlexBlock>
+        </BlockCenterUsers>
+    );
 }
+
+export default ListMessage;
