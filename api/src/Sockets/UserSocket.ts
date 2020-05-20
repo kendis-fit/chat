@@ -13,9 +13,10 @@ const joinToChat = async (server: Server, socket: Socket) =>
 
         const user: any = await User.findOne({ SocketId: socket.id }, projectionUser)
             .populate({
-                path: "Chat",
-                populate: { path: "Messages", select: projectionMessage }
+                path: "Messages",
+                select: projectionMessage
             })
+            .lean()
             .exec();
 
         if (!user)
@@ -27,7 +28,7 @@ const joinToChat = async (server: Server, socket: Socket) =>
             throw new NotFoundError("chat not found");
         }
 
-        const firstMessage = user.Chat.Messages[0]; // it generates in controller
+        const firstMessage = user.Messages[0]; // it generates in controller
         const joinedUser = { Name: user.Name, Status: user.Status };
 
         socket.join(user.Chat._id.toString());

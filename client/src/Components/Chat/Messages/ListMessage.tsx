@@ -8,14 +8,9 @@ import IInitProps from "../Interfaces/IListMessage";
 import FlexDirection from "../../../Constants/FlexDirection";
 import { BlockMessages, BlockCenterUsers } from "../../Styles/ChatView";
 
-interface IListMessage
-{
-    Messages: IMessage[];
-}
-
 const ListMessage = (props: IInitProps) => {
 
-    const [messages, setMessages] = useState<IMessage[]>([]);
+    const [messages, setMessages] = useState<IMessage[]>(props.Messages);
     const blockMessages = useRef<HTMLUListElement>(null);
 
     useEffect(() => {
@@ -29,10 +24,10 @@ const ListMessage = (props: IInitProps) => {
         scrollDown();
 
         props.Socket.on("receiveMessage", (message: IMessage) => {
-            setMessages([...messages, message]);
+            setMessages(messages => [...messages, message]);
             scrollDown();
         });
-        // eslint-disable-next-line
+        
     }, [props.Socket]);
 
     return(

@@ -23,11 +23,11 @@ const getAll = async (req: Request, res: Response) =>
         try
         {
             const projection = { _id: 1, Name: 1, Users: 1, Password: 1 };
-            const chatsWithOffset = await Chat.find({}, projection).skip(offsetN).limit(sizeN).lean().exec()
+            const chatsWithOffset = await Chat.find({}, projection).populate({ path: "Users", select: "IsActive" }).skip(offsetN).limit(sizeN).lean().exec()
             const chatsResult = chatsWithOffset.map(c => ({
                     Id: c._id,
                     Name: c.Name,
-                    Users: c.Users.length,
+                    Users: c.Users.filter((user: any) => user.IsActive === true).length,
                     IsPassword: c.Password !== undefined
                  }));
             res.status(200).send(chatsResult);
@@ -119,6 +119,49 @@ const createNewChat = async (req: Request, res: Response) =>
     }
 }
 
+const getMessagesByChatId = async (req: Request, res: Response) =>
+{
+    try
+    {
+        const id = mongoose.Types.ObjectId(req.params.id);
+        const projection = { Content: 1, Author: 1, CreatedAt: 1, _id: 0 };
+        const messages = await Message.find({ Chat: id }, projection).populate("Author", "Name -_id").lean().exec();
+        if (messages.length === 0)
+        {
+            res.sendStatus(404);
+        }
+        else
+        {
+            res.status(200).send(messages);
+        }
+    }
+    catch
+    {
+        res.sendStatus(500);
+    }
+}
+
+const getUsersByChatId = async (req: Request, res: Response) =>
+{
+    try
+    {
+        const id = mongoose.Types.ObjectId(req.params.id);
+        const users = await User.find({ Chat: id, IsActive: true }, { Name: 1, Status: 1, _id: 0 }).lean().exec();
+        if (users.length === 0)
+        {
+            res.sendStatus(404);
+        }
+        else
+        {
+            res.status(200).send(users);
+        }
+    }
+    catch
+    {
+        res.sendStatus(500);
+    }
+}
+
 export default class ChatController implements IController
 {
     private readonly name: string;
@@ -142,6 +185,8 @@ export default class ChatController implements IController
         this.chatRouter.get("/", getAll);
         this.chatRouter.post("/", this.jsonParser, createNewChat);
         this.chatRouter.post("/:id", this.jsonParser, loginByChatId);
+        this.chatRouter.get("/:id/users", getUsersByChatId);
+        this.chatRouter.get("/:id/messages", getMessagesByChatId);
         return this.chatRouter;
     }
 }

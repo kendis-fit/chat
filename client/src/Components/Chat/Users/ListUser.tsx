@@ -13,13 +13,13 @@ const ListUser = (props: IInitProps) => {
 
     useEffect(() => {
 
-        props.Socket.on("receiveUser", (user: IUser) => setUsers([...users, user]));
-        props.Socket.on("leftUser", (name: string) => setUsers(users.filter(user => user.Name !== name)));
+        props.Socket.on("receiveUser", (user: IUser) => setUsers(users => [...users, user]));
+        props.Socket.on("leftUser", (name: string) => setUsers(users => users.filter(user => user.Name !== name)));
         props.Socket.on("exitChat", () => {
             alert("Host has left from the chat");
             window.location.href = "/chats";
         });
-        // eslint-disable-next-line
+        
     }, [props.Socket]);
 
     return(
