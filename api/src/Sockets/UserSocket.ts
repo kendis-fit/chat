@@ -83,6 +83,7 @@ const leftFromChat = async (server: Server, socket: Socket) =>
             user.save();
             user.Chat.save();
 
+            server.to(user.Chat._id.toString()).emit("leftUser", user.Name);
             server.to(user.Chat._id.toString()).emit("receiveMessage", { Author: { Name: message.Name }, Content: message.Content, CreatedAt: message.CreatedAt });
         }
     }
