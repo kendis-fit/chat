@@ -12,7 +12,7 @@ const joinToChat = async (server: Server, socket: Socket) =>
         const projectionMessage = { _id: 0, Content: 1, CreatedAt: 1 };
 
         const user: any = await User.findOne({ SocketId: socket.id }, projectionUser)
-            .populate({
+        .populate({
                 path: "Messages",
                 select: projectionMessage
             })
@@ -28,12 +28,16 @@ const joinToChat = async (server: Server, socket: Socket) =>
             throw new NotFoundError("chat not found");
         }
 
-        const firstMessage = user.Messages[0]; // it generates in controller
         const joinedUser = { Name: user.Name, Status: user.Status };
 
         socket.join(user.Chat._id.toString());
 
-        server.to(user.Chat._id.toString()).emit("receiveMessage", firstMessage);
+        const msg: any = new Message({ Author: user._id, Chat: user.Chat._id, Content: `User ${user.Name} has joined to chat` });
+
+        user.Messages.push(msg);
+        msg.save();
+
+        server.to(user.Chat._id.toString()).emit("receiveMessage", { Author: { Name: user.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt });
         server.to(user.Chat._id.toString()).emit("receiveUser", joinedUser);
     }
     catch (error)

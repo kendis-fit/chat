@@ -72,14 +72,11 @@ const loginByChatId = async (req: Request, res: Response) =>
         else
         {
             const user: any = new User({ SocketId: Id, Name: Login, Chat: chat._id });
-            const message: any = new Message({ Author: user._id, Chat: chat._id, Content: `User ${Login} has joined to chat` });
             
             chat.Users.push(user);
-            chat.Messages.push(message);
 
             user.save();
             chat.save();
-            message.save();
 
             res.sendStatus(200);
         }
