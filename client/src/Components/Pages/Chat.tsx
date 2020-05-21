@@ -1,21 +1,13 @@
-import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 import ChatApi from "../../Api/ChatApi";
 import { FlexBlock } from "../Styles/Blocks";
+import IUser from "../Chat/Interfaces/IUser";
 import ListUser from "../Chat/Users/ListUser";
+import IMessage from "../Chat/Interfaces/IMessage";
 import ListMessage from "../Chat/Messages/ListMessage";
 import IConnection from "../Chat/Interfaces/IConnection";
-import IMessage from "../Chat/Interfaces/IMessage";
-import IUser from "../Chat/Interfaces/IUser";
-
-interface IChatState
-{
-    Users: IUser[];
-    Messages: IMessage[];
-    IsFetched: boolean;
-    IsError: boolean;
-}
 
 interface IChatProps extends IConnection
 {
@@ -24,8 +16,8 @@ interface IChatProps extends IConnection
 
 const Chat = (props: IChatProps) => {
 
-    const [users, setUsers] = useState([]);
-    const [messages, setMessages] = useState([]);
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [messages, setMessages] = useState<IMessage[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -43,8 +35,8 @@ const Chat = (props: IChatProps) => {
             }
         }
         initData();
-        // eslint-disable-next-line
-    }, []);
+
+    }, [props.Id]);
 
     if (props.Socket === null || error)
     {
