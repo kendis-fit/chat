@@ -38,7 +38,7 @@ const joinToChat = async (server: Server, socket: Socket) =>
         msg.save();
 
         server.to(user.Chat._id.toString()).emit("receiveMessage", { Author: { Name: user.Name }, Content: msg.Content, CreatedAt: msg.CreatedAt });
-        server.to(user.Chat._id.toString()).emit("receiveUser", joinedUser);
+        socket.broadcast.to(user.Chat._id.toString()).emit("receiveUser", joinedUser);
     }
     catch (error)
     {
